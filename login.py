@@ -30,8 +30,30 @@ def get_profile(smartApi:SmartConnect):
 
 	return data['data']
 
-def get_portfolio(smartApi:SmartConnect):
-	
+def get_portfolio(smartApi:SmartConnect)-> []:
+	data = smartApi.holding()
+	holdings = []
+	if data['message'] == "SUCCESS":
+		holding_data = data['data']
+		
+		for entry in holding_data :
+			item = {}
+			item['tradingSymbol'] = entry['tradingSymbol']
+			item['quantity'] = entry['quantity']
+			item['symboltoken'] = entry['symboltoken']
+			item['averageprice'] = entry['averageprice']
+			item['ltp'] = entry['ltp']
+			item['profitandloss'] = entry['profitandloss']
+
+			holdings.append(item)
+	else: 
+
+		print(data['message'])
+
+
+	return holdings
+
+
 
 
 if __name__ == "__main__":
@@ -40,6 +62,8 @@ if __name__ == "__main__":
 	result = login(smartApi,otp_key,"K341951","5991")
 	if result:
 		print(smartApi.userId)
-	print(smartApi.holding()['data'][2])
+	portfolio = get_portfolio(smartApi)
+
+	print(portfolio)
 
 	
